@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 class BirdWidget extends StatefulWidget {
-  final double speed;  // how fast bird flies across
-  final double top;    // vertical position
-  final double size;   // size of bird
-  final bool reverse;  // fly right to left if true
+  final double speed;
+  final double top;
+  final double size;
+  final bool reverse;
 
   const BirdWidget({
     Key? key,
@@ -21,8 +21,8 @@ class BirdWidget extends StatefulWidget {
 class _BirdWidgetState extends State<BirdWidget>
     with TickerProviderStateMixin {
 
-  late AnimationController _flyController;   // moves bird across screen
-  late AnimationController _flapController;  // flaps wings
+  late AnimationController _flyController;
+  late AnimationController _flapController;
   late Animation<double> _flyAnimation;
   late Animation<double> _flapAnimation;
 
@@ -30,21 +30,19 @@ class _BirdWidgetState extends State<BirdWidget>
   void initState() {
     super.initState();
 
-    // Flying across screen
     _flyController = AnimationController(
       duration: Duration(seconds: widget.speed.toInt()),
       vsync: this,
     );
 
-    // Wing flapping
     _flapController = AnimationController(
-      duration: Duration(milliseconds: 400), // flap speed
+      duration: Duration(milliseconds: 400),
       vsync: this,
     );
 
     _flyAnimation = Tween(
-      begin: widget.reverse ? 500.0 : -150.0, // start position
-      end: widget.reverse ? -150.0 : 500.0,   // end position
+      begin: widget.reverse ? 500.0 : -150.0,
+      end: widget.reverse ? -150.0 : 500.0,
     ).animate(
       CurvedAnimation(
         parent: _flyController,
@@ -52,10 +50,10 @@ class _BirdWidgetState extends State<BirdWidget>
       ),
     );
 
-    // Wing angle — up and down
+
     _flapAnimation = Tween(
-      begin: -0.3, // wings down
-      end: 0.3,    // wings up
+      begin: -0.3,
+      end: 0.3,
     ).animate(
       CurvedAnimation(
         parent: _flapController,
@@ -64,7 +62,7 @@ class _BirdWidgetState extends State<BirdWidget>
     );
 
     _flyController.repeat();
-    _flapController.repeat(reverse: true); // flaps forever
+    _flapController.repeat(reverse: true);
   }
 
   @override
@@ -83,7 +81,7 @@ class _BirdWidgetState extends State<BirdWidget>
           top: widget.top,
           left: _flyAnimation.value,
           child: Transform.scale(
-            scaleX: widget.reverse ? -1 : 1, // flip if flying right to left
+            scaleX: widget.reverse ? -1 : 1,
             child: CustomPaint(
               size: Size(widget.size, widget.size * 0.6),
               painter: BirdPainter(
@@ -105,21 +103,21 @@ class BirdPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Color(0xFF2E86AB)  // nice blue bird color
+      ..color = Color(0xFF2E86AB)
       ..style = PaintingStyle.fill;
 
     final wingPaint = Paint()
-      ..color = Color(0xFF1A5276)  // darker blue for wings
+      ..color = Color(0xFF1A5276)
       ..style = PaintingStyle.fill;
 
     final beakPaint = Paint()
-      ..color = Color(0xFFE67E22)  // orange beak
+      ..color = Color(0xFFE67E22)
       ..style = PaintingStyle.fill;
 
     double cx = size.width * 0.5;
     double cy = size.height * 0.5;
 
-    // --- Body ---
+
     final bodyPath = Path();
     bodyPath.addOval(Rect.fromCenter(
       center: Offset(cx, cy),
@@ -128,14 +126,14 @@ class BirdPainter extends CustomPainter {
     ));
     canvas.drawPath(bodyPath, paint);
 
-    // --- Head ---
+
     canvas.drawCircle(
       Offset(cx + size.width * 0.2, cy - size.height * 0.1),
       size.width * 0.12,
       paint,
     );
 
-    // --- Beak ---
+
     final beakPath = Path();
     beakPath.moveTo(cx + size.width * 0.32, cy - size.height * 0.1);
     beakPath.lineTo(cx + size.width * 0.45, cy - size.height * 0.05);
@@ -143,7 +141,7 @@ class BirdPainter extends CustomPainter {
     beakPath.close();
     canvas.drawPath(beakPath, beakPaint);
 
-    // --- Tail ---
+
     final tailPath = Path();
     tailPath.moveTo(cx - size.width * 0.22, cy);
     tailPath.lineTo(cx - size.width * 0.45, cy - size.height * 0.15);
@@ -151,7 +149,7 @@ class BirdPainter extends CustomPainter {
     tailPath.close();
     canvas.drawPath(tailPath, wingPaint);
 
-    // --- Upper Wing (flaps up and down) ---
+
     canvas.save();
     canvas.translate(cx, cy - size.height * 0.05);
     canvas.rotate(-flapAngle); // rotates with flapAngle
@@ -168,10 +166,10 @@ class BirdPainter extends CustomPainter {
     canvas.drawPath(upperWingPath, wingPaint);
     canvas.restore();
 
-    // --- Lower Wing (flaps opposite direction) ---
+
     canvas.save();
     canvas.translate(cx, cy + size.height * 0.05);
-    canvas.rotate(flapAngle); // opposite rotation
+    canvas.rotate(flapAngle);
     final lowerWingPath = Path();
     lowerWingPath.moveTo(0, 0);
     lowerWingPath.quadraticBezierTo(
