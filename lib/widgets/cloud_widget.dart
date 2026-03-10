@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CloudWidget extends StatefulWidget {
-  final double speed;    // how fast the cloud moves
-  final double top;      // vertical position
-  final double size;     // size of the cloud
+  final double speed;
+  final double top;
+  final double size;
 
   const CloudWidget({
     Key? key,
@@ -31,16 +31,15 @@ class _CloudWidgetState extends State<CloudWidget>
     );
 
     _animation = Tween(
-      begin: -200.0, // start off screen left
-      end: 500.0,    // end off screen right
+      begin: -200.0,
+      end: 500.0,
     ).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Curves.linear, // constant speed — like real clouds
+        curve: Curves.linear,
       ),
     );
 
-    // Repeat forever
     _controller.repeat();
   }
 
@@ -57,9 +56,9 @@ class _CloudWidgetState extends State<CloudWidget>
       builder: (context, child) {
         return Positioned(
           top: widget.top,
-          left: _animation.value, // moves horizontally
+          left: _animation.value,
           child: Opacity(
-            opacity: 0.7, // slightly transparent
+            opacity: 0.7,
             child: _buildCloud(),
           ),
         );
@@ -67,14 +66,12 @@ class _CloudWidgetState extends State<CloudWidget>
     );
   }
 
-  // Builds a cloud shape using overlapping circles
   Widget _buildCloud() {
     return SizedBox(
       width: widget.size,
       height: widget.size * 0.6,
       child: Stack(
         children: [
-          // Main cloud body
           Positioned(
             bottom: 0,
             left: widget.size * 0.1,
@@ -94,7 +91,6 @@ class _CloudWidgetState extends State<CloudWidget>
               ),
             ),
           ),
-          // Left puff
           Positioned(
             bottom: widget.size * 0.2,
             left: widget.size * 0.1,
@@ -107,7 +103,6 @@ class _CloudWidgetState extends State<CloudWidget>
               ),
             ),
           ),
-          // Middle puff (biggest)
           Positioned(
             bottom: widget.size * 0.2,
             left: widget.size * 0.3,
@@ -120,7 +115,6 @@ class _CloudWidgetState extends State<CloudWidget>
               ),
             ),
           ),
-          // Right puff
           Positioned(
             bottom: widget.size * 0.2,
             left: widget.size * 0.55,
