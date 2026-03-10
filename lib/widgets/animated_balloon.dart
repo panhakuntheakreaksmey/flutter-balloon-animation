@@ -195,17 +195,14 @@ class _AnimatedBalloonWidgetState extends State<AnimatedBalloonWidget>
         curve: Interval(0.0, 0.6, curve: Curves.easeInOut),
       ));
 
-      // ✅ Falls ALL the way off screen bottom — full screen height + balloon height
       _animationDeflateFall = Tween(
         begin: 0.0,
         end: _screenHeight + _balloonHeight,
       ).animate(CurvedAnimation(
         parent: _controllerPop,
-        // ✅ Fall starts at 40% so deflate finishes first, then it falls
         curve: Interval(0.4, 1.0, curve: Curves.easeIn),
       ));
 
-      // ✅ Fade out only at the very end when fully off screen
       _animationDeflateFade = Tween(
         begin: 1.0,
         end: 0.0,
@@ -214,10 +211,8 @@ class _AnimatedBalloonWidgetState extends State<AnimatedBalloonWidget>
         curve: Interval(0.85, 1.0, curve: Curves.easeIn),
       ));
 
-      // ✅ When pop finishes — wait random 3-6 seconds then respawn
       _controllerPop.addStatusListener((status) {
         if (status == AnimationStatus.completed) {
-          // random delay between 3 and 6 seconds
           final respawnDelay = 3 + _random.nextInt(4);
           Future.delayed(Duration(seconds: respawnDelay), () {
             if (mounted) {
@@ -231,7 +226,6 @@ class _AnimatedBalloonWidgetState extends State<AnimatedBalloonWidget>
               _controllerPop.reset();
               _controllerFloatUp.reset();
               _controllerGrowSize.reset();
-              // ✅ Grow from size 0 at bottom — looks like new balloon
               _controllerFloatUp.forward();
               _controllerGrowSize.forward();
             }
@@ -239,7 +233,6 @@ class _AnimatedBalloonWidgetState extends State<AnimatedBalloonWidget>
         }
       });
 
-      // Float away after reaching top
       _controllerFloatUp.addStatusListener((status) {
         if (status == AnimationStatus.completed &&
             !_isFloatingAway &&
@@ -253,7 +246,6 @@ class _AnimatedBalloonWidgetState extends State<AnimatedBalloonWidget>
         }
       });
 
-      // Reset and loop after floating away
       _controllerFloatAway.addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           Future.delayed(Duration(seconds: 1), () {
@@ -331,7 +323,6 @@ class _AnimatedBalloonWidgetState extends State<AnimatedBalloonWidget>
       _controllerFloatAway.reset();
       setState(() => _isFloatingAway = false);
     }
-    // ✅ Mark as popped immediately so it stops responding to gestures
     setState(() => _isPopped = true);
     _playDeflate();
     _controllerPop.forward();
@@ -353,7 +344,6 @@ class _AnimatedBalloonWidgetState extends State<AnimatedBalloonWidget>
 
   @override
   Widget build(BuildContext context) {
-    // ✅ Hide only when truly gone (between fall off screen and respawn)
     if (_isPopped && !_controllerPop.isAnimating) return SizedBox.shrink();
 
     return AnimatedBuilder(
@@ -423,7 +413,6 @@ class _AnimatedBalloonWidgetState extends State<AnimatedBalloonWidget>
                                 _lastTapTime = null;
                                 _handleDoubleTap();
                               } else {
-                                // first tap — wait for possible second
                                 _lastTapTime = now;
                                 Future.delayed(
                                   Duration(milliseconds: 350),
@@ -450,7 +439,6 @@ class _AnimatedBalloonWidgetState extends State<AnimatedBalloonWidget>
                           alignment: Alignment.center,
                           children: [
 
-                            // Shadow and balloon in ONE Transform
                             Transform(
                               alignment: Alignment.center,
                               transform: Matrix4.identity()
@@ -489,7 +477,6 @@ class _AnimatedBalloonWidgetState extends State<AnimatedBalloonWidget>
                                     ),
                                   ),
 
-                                  // Balloon with wobble
                                   RotationTransition(
                                     turns: _controllerPop.isAnimating
                                         ? _animationDeflateWobble
@@ -510,7 +497,6 @@ class _AnimatedBalloonWidgetState extends State<AnimatedBalloonWidget>
                                           ),
                                         ),
 
-                                        // Large shiny highlight
                                         Positioned(
                                           top: _balloonHeight * 0.08,
                                           left: _balloonWidth * 0.15,
@@ -533,7 +519,6 @@ class _AnimatedBalloonWidgetState extends State<AnimatedBalloonWidget>
                                           ),
                                         ),
 
-                                        // Small secondary highlight
                                         Positioned(
                                           top: _balloonHeight * 0.18,
                                           left: _balloonWidth * 0.2,
